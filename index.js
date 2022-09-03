@@ -114,15 +114,15 @@ app.post('/messages', async (req, res) => {
     
 });
 
-// app.get('/messages', async (req, res) => {
-//    try { 
-//         const getMessages = await db.collection('message').find().toArray();
+app.get('/messages', async (req, res) => {
+   try { 
+        const getMessages = await db.collection('message').find().toArray();
 
-//         res.send(getMessages);
+        res.send(getMessages);
 
-//     } catch (err) {
-//         res.sendStatus(500);
-//     }
-// });
+    } catch (err) {
+        res.sendStatus(500);
+    }
+});
 
 app.listen(5000, () => console.log("Listening on port 5000"));
