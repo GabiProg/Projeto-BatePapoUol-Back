@@ -46,7 +46,7 @@ app.post('/participants', async (req, res) => {
 
     try{
         const usedName = await db.collection('participants').findOne({name : name});
-        if(!usedName){
+        if(usedName){
             res.sendStatus(409);
             return;
         } 
@@ -115,10 +115,17 @@ app.post('/messages', async (req, res) => {
 });
 
 app.get('/messages', async (req, res) => {
-   try { 
+    const limit = parseInt(req.query.limit);
+    const { user } = req.headers; 
+    
+    try { 
         const getMessages = await db.collection('message').find().toArray();
-
-        res.send(getMessages);
+        
+        if(limit){
+            res.send([...getMessages].slice(-limit));
+        } else {
+            res.send(getMessages);
+        }
 
     } catch (err) {
         res.sendStatus(500);
