@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import joi from "joi";
 import dayjs from 'dayjs';
@@ -120,11 +120,13 @@ app.get('/messages', async (req, res) => {
     
     try { 
         const getMessages = await db.collection('message').find().toArray();
+
+        const getUserMessages = getMessages.filter(message => message.to === user || message.from === user || message.to === 'Todos');
         
         if(limit){
-            res.send([...getMessages].slice(-limit));
+            res.send([...getUserMessages].slice(-limit));
         } else {
-            res.send(getMessages);
+            res.send(getUserMessages);
         }
 
     } catch (err) {
