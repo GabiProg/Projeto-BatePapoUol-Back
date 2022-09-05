@@ -151,4 +151,23 @@ app.post('/status', async (req, res) => {
     }
 });
 
+setInterval( async () => {
+    const timeNow = Date.now()-10000;
+
+    const getStatuts = await db.collection('participants').find().toArray();
+    const getInvalidParticipants = getStatuts.filter(status => ((Date.now() - status.lastStatus)/1000) > 10);
+    getInvalidParticipants.map(filter => {
+        db.collection('message').insertOne({
+            from: filter.name,
+            to: 'Todos',
+            text: 'sai da sala...',
+            type: 'status',
+            time: now.format("HH:mm:ss")
+        });
+        db.collection('participants').deleteOne({name: filter.name});
+    }); 
+        
+
+}, 15000);
+
 app.listen(5000, () => console.log("Listening on port 5000"));
